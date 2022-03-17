@@ -22,13 +22,13 @@ class AbsWindowComponent(object, metaclass=ABCMeta):
     """
     
     def __init__(self, window_name=None)-> None:
-        self.event_handler:dict[str, list[callable , tuple]] = {}
+        self.event_handler:dict[str, list[callable | tuple]] = {}
         self.event:str = ""
         self.value:dict[str, str] = {}
         self.window:Window = Window(window_name)
     
     @abstractmethod
-    def _lay_out(self) -> list[list[any]]:
+    def _lay_out(self) -> list[list[Any]]:
         """_summary_\n
         レイアウト配列を返す\n
         Returns:\n

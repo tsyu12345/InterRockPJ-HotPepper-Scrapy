@@ -1,12 +1,12 @@
 #型関係
 from __future__ import annotations
+from turtle import title
 from typing import Any, Final as const
 #GUIモジュール
 from Abstract import *
 import PySimpleGUI as gui
 import sys
 sys.path.append('../')
-from ..JisCode.jiscode import JisCode
 
 class AreaInput(AbsGUIComponent):
     """_summary_\n
@@ -18,9 +18,11 @@ class AreaInput(AbsGUIComponent):
     
     def __init__(self) -> None:
         
-        self.layout:const[list[list[Any]]] = self.__layout__()
+        self.lay_out:const[list[list[Any]]] = self.__layout()
+        self.titleText: list[gui.Text] = self.lay_out[0]
+        self.Input: list[gui.InputText | gui.Button] = self.lay_out[1]
         
-    def __layout__(self) -> list[list[Any]]:
+    def __layout(self) -> list[list[Any]]:
         
         L: const[list[Any]] = [
             [gui.Text("都道府県", key=self.TITLE_KEY, size=(60, None))],
@@ -46,9 +48,11 @@ class JunleInput(AbsGUIComponent):
     
     def __init__(self) -> None:
         
-        self.layout:const[list[list[Any]]] = self.__layout__()
+        self.layout:const[list[list[Any]]] = self.__layout()
+        self.titleText:list[gui.Text] = self.layout[0]
+        self.select: list[gui.InputOptionMenu] = self.layout[1]
         
-    def __layout__(self) -> list[list[Any]]:
+    def __layout(self) -> list[list[Any]]:
         
         L: const[list[Any]] = [
             [gui.Text("ジャンル", key=self.TITLE_KEY, size=(60, None))],
@@ -68,9 +72,11 @@ class PathInput(AbsGUIComponent):
     
     def __init__(self) -> None:
         
-        self.layout:const[list[list[Any]]] = self.__layout__()
+        self.layout:const[list[list[Any]]] = self.__layout()
+        self.titleText:list[gui.Text] = self.layout[0]
+        self.InputArea: list[gui.InputText | gui.Button] = self.layout[1]
     
-    def __layout__(self) -> list[list[Any]]:
+    def __layout(self) -> list[list[Any]]:
         
         L: const[list[list[Any]]] = [
             [gui.Text("フォルダ選択", key=self.TITLE_KEY, size=(60, None))],
@@ -91,7 +97,7 @@ class AreaSelectWindow(AbsWindowComponent):
     def __init__(self, name: str) -> None:
         super().__init__(name)
         
-    def __layout__(self) -> list[list[Any]]:
+    def layout(self) -> list[list[Any]]:
         
         area_list: list[str] #TODO:JISコードオブジェクトから都道府県リストを取得する
         L: list[list[Any]] = []
@@ -106,12 +112,64 @@ class AreaSelectWindow(AbsWindowComponent):
         L.append([gui.Button('OK', key=self.OK_KEY)])
         
         return L
+    
+    def dispose(self) -> None:
+        """_summary_\n
+        ウィンドウを閉じた際のイベント処理
+        """
+        pass
 
 
 class MainMenu(AbsWindowComponent):
     """_summary_\n
     メインメニュー画面
     """
+    EXECUTE_BTN_KEY: str = "execute"
+    CUSTOM_WINDOW_TITLE: str = "抽出条件入力画面"
     
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str="") -> None:
         super().__init__(name)
+        
+        self.area_module = AreaInput()
+        self.junle_module = JunleInput()
+        self.path_module = PathInput()
+        
+        self.lay_out = self.__layout()
+        
+        self.window = gui.Window(
+            name+self.CUSTOM_WINDOW_TITLE,
+            layout=self.lay_out,
+            debugger_enabled=True
+        )
+        
+    def __layout(self) -> list[list[Any]]:
+        
+        L:list[list[Any]] = [
+            [
+                gui.Frame(
+                        "抽出条件", [
+                            self.area_module.titleText, 
+                            self.area_module.Input,
+                            self.junle_module.titleText, 
+                            self.junle_module.select,
+                        ]
+                    )
+            ],
+            [
+                gui.Frame(
+                    "保存先",
+                    [
+                        self.path_module.titleText,
+                        self.path_module.InputArea
+                    ]
+                )
+            ],
+            [
+                gui.Button("抽出開始", key=self.EXECUTE_BTN_KEY)
+            ]
+        ]
+        
+        return L
+        
+    def dispose(self) -> None:
+        self.window.close()

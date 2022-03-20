@@ -99,6 +99,10 @@ class Jiscode():
         
         prefecture_string:str = ""
         for prefecture_name in cls.JISCODE_DICT.keys():
-            prefecture_string += prefecture_name + " " + Separator
+            prefecture_string += prefecture_name + Separator
             
         return prefecture_string
+    
+if __name__ == "__main__":
+    print(Jiscode.get_all_prefecture_string())
+    

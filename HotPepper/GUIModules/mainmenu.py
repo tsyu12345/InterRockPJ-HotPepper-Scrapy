@@ -7,7 +7,7 @@ from Abstract import *
 import PySimpleGUI as gui
 import sys
 sys.path.append('../')
-
+from ..JisCode.jiscode import Jiscode
 class AreaInput(AbsGUIComponent):
     """_summary_\n
     対象都道府県の入力オブジェクト
@@ -96,10 +96,17 @@ class AreaSelectWindow(AbsWindowComponent):
     
     def __init__(self, name: str) -> None:
         super().__init__(name)
+        self.window = gui.Window(
+            name, 
+            layout=self.layout(),
+            debugger_enabled=True
+        )
         
     def layout(self) -> list[list[Any]]:
-        
-        area_list: list[str] #TODO:JISコードオブジェクトから都道府県リストを取得する
+        #TODO:JISコードオブジェクトから都道府県リストを取得する
+    
+        all_strings:const[str] = Jiscode.get_all_prefecture_string()
+        area_list: list[str] = all_strings.split(",")
         L: list[list[Any]] = []
         cnt: int = 0
         for i in range(8):

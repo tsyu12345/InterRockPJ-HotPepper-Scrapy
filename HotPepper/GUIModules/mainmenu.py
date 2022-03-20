@@ -101,6 +101,7 @@ class AreaSelectWindow(AbsWindowComponent):
             layout=self.layout(),
             debugger_enabled=True
         )
+        self.selected_prefecture: list[str] = []
         
     def layout(self) -> list[list[Any]]:
         #TODO:JISコードオブジェクトから都道府県リストを取得する
@@ -120,11 +121,17 @@ class AreaSelectWindow(AbsWindowComponent):
         
         return L
     
+    def __save_selected_prefecture(self) -> None:
+        """_summary_\n
+        選択された都道府県を保存する
+        """
+        
+    
     def dispose(self) -> None:
         """_summary_\n
         ウィンドウを閉じた際のイベント処理
         """
-        pass
+        
 
 
 class MainMenu(AbsWindowComponent):

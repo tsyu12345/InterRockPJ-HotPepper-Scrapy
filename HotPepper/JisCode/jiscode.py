@@ -60,15 +60,21 @@ class Jiscode():
         pass
     
     @classmethod
-    def get_jis_code(cls, prefecture_name:str) -> int:
+    def get_jis_code(cls, prefecture_name:str, ZeroGrant:bool=False) -> int|str:
         """_summary_\n
         都道府県名からJISコードを取得する。\n
         Args:\n
             prefecture_name (str): 都道府県名\n
+            ZeroGrant (bool): Trueの場合、JISコードが1桁場合は0を付与し返す。例:01,09\n
+            ※その場合は返り値が文字列になる。\n
         Returns:\n
-            int: JISコード\n
+            int or str: JISコード\n
         """
-        jiscode:int = cls.JISCODE_DICT[prefecture_name]
+        jiscode:int|str = cls.JISCODE_DICT[prefecture_name]
+        
+        if ZeroGrant and jiscode < 10:
+            jiscode = "0" + str(jiscode)
+            
         return jiscode
     
     @classmethod

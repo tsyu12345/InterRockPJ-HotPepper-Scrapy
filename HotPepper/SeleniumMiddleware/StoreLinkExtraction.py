@@ -84,7 +84,7 @@ class StoreLinkExtraction(AbsLinkExtraction):
         
         input_elm: WebElement = self.driver.find_element_by_id(input_id)
         #TODO:ここで入力ボックスにターゲット値を入れる。
-        
+        #MEMO:各店舗のURL抽出は、Scrapy単体でできそう。JS無くてもリンク乗ってた。
         
     def __next_page(self) -> None:
         """_summary_\n

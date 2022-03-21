@@ -1,16 +1,22 @@
 #型関係
 from __future__ import annotations
-from turtle import title
-from typing import Any, Final as const
+from typing import Any, Final as const, Tuple
 #GUIモジュール
 from Abstract import *
 import PySimpleGUI as gui
 import sys
 sys.path.append('../')
 from ..JisCode.jiscode import Jiscode
+
+
 class AreaInput(AbsGUIComponent):
     """_summary_\n
-    対象都道府県の入力オブジェクト
+    対象都道府県の入力オブジェクト.\n
+    イベントキーは以下の通り\n
+    ・エリア選択ボタン押下: BUTTON_KEY\n
+    ・エリア入力: INPUT_KEY\n
+    ・タイトルキー: TITLE_KEY\n
+    
     """
     BUTTON_KEY: const[str] = "SELECTAREA"
     INPUT_KEY: const[str] = "AREAINPUT"
@@ -33,7 +39,10 @@ class AreaInput(AbsGUIComponent):
     
 class JunleInput(AbsGUIComponent):
     """_summary_\n
-    対象ジャンルの入力オブジェクト
+    対象ジャンルの入力オブジェクト。\n
+    イベントキーは以下の通り\n
+    ・ジャンル入力キー:INPUT_KEY\n
+    ・タイトルキー:TITLE_KEY\n
     """
     
     INPUT_KEY: const[str] = "JUNLEINPUT"
@@ -64,11 +73,16 @@ class JunleInput(AbsGUIComponent):
 class PathInput(AbsGUIComponent):
     """_summary_\n
     保存先のパスを入力するオブジェクト。
+    イベントキーは以下の通り\n
+    ・入力値キー:INPUT_KEY\n
+    ・参照ボタン押下キー:BUTTON_KEY\n
+    ・タイトルキー:TITLE_KEY\n
     """
     
     INPUT_KEY: const[str] = "PATHINPUT"
     TITLE_KEY: const[str] = "PATHTITLE"
     BUTTON_KEY: const[str] = "PATHSELECT"
+    FILE_FORMAT: Tuple[str, str] = ("Excelファイル", "*.xlsx")
     
     def __init__(self) -> None:
         
@@ -82,7 +96,7 @@ class PathInput(AbsGUIComponent):
             [gui.Text("フォルダ選択", key=self.TITLE_KEY, size=(60, None))],
             [
                 gui.InputText(key=self.INPUT_KEY), 
-                gui.SaveAs("・・・", file_types=([('Excelファイル', '*.xlsx')]), key=self.BUTTON_KEY)
+                gui.SaveAs("・・・", file_types=([self.FILE_FORMAT]), key=self.BUTTON_KEY)
             ]
         ]
         
@@ -90,7 +104,9 @@ class PathInput(AbsGUIComponent):
 
 class AreaSelectWindow(AbsWindowComponent):
     """_summary_\n
-    都道府県選択画面
+    都道府県選択画面.
+    イベントキーは以下の通り\n
+    ・完了ボタン押下: OK_KEY\n
     """
     OK_KEY: const[str] = "OK"
     
@@ -125,13 +141,26 @@ class AreaSelectWindow(AbsWindowComponent):
         """_summary_\n
         選択された都道府県を保存する
         """
+        for v in self.value.keys():
+            if self.value[v] == True and v not in self.selected_prefecture:
+                self.selected_prefecture.append(v)
+        print("SELECTED AREA:", self.selected_prefecture)
         
+    def get_selected_area(self, sep:str=",") -> str:
+        """_summary_\n
+        選択された都道府県を返す。
+        Args:\n
+            sep: 区切り文字
+        """
+        string:str = sep.join(self.selected_prefecture)
+        return string
     
     def dispose(self) -> None:
         """_summary_\n
         ウィンドウを閉じた際のイベント処理
-        """
-        
+        """ 
+        self.__save_selected_prefecture()
+        self.window.close()
 
 
 class MainMenu(AbsWindowComponent):

@@ -4,7 +4,7 @@ from typing import Final as const
 from scrapy.crawler import CrawlerProcess 
 from scrapy.utils.project import get_project_settings 
 from scrapy.settings import Settings
-
+from HotPepper.spiders.HTB import HtbSpider
 class SpiderCall():
     
     #TODO:出力順に各itemの辞書を作成する。
@@ -37,6 +37,14 @@ class SpiderCall():
         
     def run(self) -> None:
         
+        self.crawler.crawl(HtbSpider, self.target_pref_list[0], self.genre)
+        self.crawler.start()
         
+    
+    
+if __name__ == '__main__':
+    
+    test = SpiderCall(['高知県'], 'hair')
+    test.run()
     
     

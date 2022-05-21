@@ -4,7 +4,7 @@ from urllib import response
 import scrapy
 import re
 from scrapy.http.response import Response
-from selector_dict import DOMSelector
+from .selector_dict import DOMSelector
 
 
 class HtbSpider(scrapy.Spider):
@@ -45,10 +45,11 @@ class HtbSpider(scrapy.Spider):
             target_link_list:const[list[str]] = response.css(f"h3.{target_class} > a::attr(href)").getall()
         
             for url in target_link_list:
+                print(url)
                 yield scrapy.Request(url, callback=self.parse)
 
             next_page_url: const[str] = self.BASE_URL + f'?freeword={self.target_pref}&searchGender=ALL&genreAlias={self.genre}&pn={current_page+1}'
-            yield scrapy.Request(next_page_url, callback=self.search_request)
+            scrapy.Request(next_page_url)
 
     
     def parse(self, response:Response) -> None:
@@ -72,7 +73,7 @@ class HtbSpider(scrapy.Spider):
         try:
             counter = int(counter_text)
         except ValueError:
-            raise TypeError("検索結果一覧にある、店舗総数が数値ではない、あるいは、数値変換に失敗しました。")
+            raise ValueError("検索結果一覧にある、店舗総数が数値ではない、あるいは、数値変換に失敗しました。")
         else:
             return counter
         
@@ -82,13 +83,20 @@ class HtbSpider(scrapy.Spider):
         検索結果一覧にある、ページ総数を取得する
         """
         selector: const[str] = DOMSelector.RESULT_PAGE_COUNT_DOM[self.genre]
-        counter_text: const[str] = response.css(selector+"::text").get()
+        try:
+            print(response.css(selector+"::text"))
+            counter_text: const[str] = response.css(selector+"::text").extract_first()
+            print("COUNTER_TEXT:", counter_text)
+        except TypeError:
+            raise TypeError("検索結果一覧にある、ページ総数が取得できませんでした。")
+        
         page_text_all:const[list[str]] = re.split('[/ ]', counter_text)
         page_text:const[str] = re.sub(r"\D", "", page_text_all[1])
         try:
-            counter = int(page_text)
+            if page_text is not None:
+                counter = int(page_text)
         except ValueError:
-            raise TypeError("検索結果一覧にある、ページ総数が数値ではない、あるいは、数値変換に失敗しました。")
+            raise ValueError("検索結果一覧にある、ページ総数が数値ではない、あるいは、数値変換に失敗しました。")
         else:
             return counter
         

@@ -16,21 +16,21 @@ from typing import Final as const
 class DOMSelector(object):
     
     RESULT_COUNT_DOM_WRAPPER: const[dict[str, str]] = {
-        "hair": "div.preListHead",
+        "hair": "div.preListHead > div.pr",
         "neil": "",
         "relax": "",
         "esthetic": "",
     }
     
     RESULT_COUNT_DOM: const[dict[str, str]] = {
-        "hair": RESULT_COUNT_DOM_WRAPPER["hair"]+" > p > span.numberOfResult",
+        "hair": RESULT_COUNT_DOM_WRAPPER['hair'] +" > p > span.numberOfResult",
         "neil": "div.",
         "relax": "div.",
         "esthetic": "div.",
     }
     
     RESULT_PAGE_COUNT_DOM: const[dict[str, str]] = {
-        "hair": RESULT_COUNT_DOM_WRAPPER["hair"]+" > p.pa.bottom0.right0",
+        "hair": "div.preListHead > div.pr > p.pa.bottom0.right0",
     }
     
     

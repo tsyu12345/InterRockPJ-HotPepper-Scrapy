@@ -13,25 +13,37 @@
 from __future__ import annotations
 from typing import Final as const
 
+
+class Genre(object):
+    
+    HAIR: const[str] = 'hair'
+    NEIL: const[str] = 'neil'
+    RELAX: const[str] = 'relax'
+    ESTHE: const[str] = 'esthetic'
+
 class DOMSelector(object):
     
+    
     RESULT_COUNT_DOM_WRAPPER: const[dict[str, str]] = {
-        "hair": "div.preListHead > div.pr",
-        "neil": "",
-        "relax": "",
-        "esthetic": "",
+        Genre.HAIR: "div.preListHead > div.pr",
+        Genre.NEIL: "",
+        Genre.RELAX: "",
+        Genre.ESTHE: "",
     }
     
     RESULT_COUNT_DOM: const[dict[str, str]] = {
-        "hair": RESULT_COUNT_DOM_WRAPPER['hair'] +" > p > span.numberOfResult",
-        "neil": "div.",
-        "relax": "div.",
-        "esthetic": "div.",
+        Genre.HAIR: RESULT_COUNT_DOM_WRAPPER['hair'] +" > p > span.numberOfResult",
+        Genre.NEIL: "div.",
+        Genre.RELAX: "div.",
+        Genre.ESTHE: "div.",
     }
     
     RESULT_PAGE_COUNT_DOM: const[dict[str, str]] = {
-        "hair": "div.preListHead > div.pr > p.pa.bottom0.right0",
+        Genre.HAIR: RESULT_COUNT_DOM_WRAPPER[Genre.HAIR]+" > p.pa.bottom0.right0",
     }
+    
+    #店舗ページでの抽出タグ#
+    
     
     
     

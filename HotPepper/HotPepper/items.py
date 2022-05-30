@@ -37,7 +37,7 @@ class HotpepperItem(Item):
     parking = Field() #駐車場
     kodawari = Field() #こだわり
     note = Field() #備考
-    recurute = Field() #採用情報
+    reculute = Field() #採用情報
     
         
     

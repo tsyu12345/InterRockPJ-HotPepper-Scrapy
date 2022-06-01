@@ -1,0 +1,114 @@
+from __future__ import annotations
+
+class Jiscode():
+    
+    """_summary_\n
+    入力された文字列をJISコードに変換する
+    """
+    
+    JISCODE_DICT:dict[str, int] = {
+        "北海道": 1,
+        "青森県": 2,
+        "岩手県": 3,
+        "宮城県": 4,
+        "秋田県": 5,
+        "山形県": 6,
+        "福島県": 7,
+        "茨城県": 8,
+        "栃木県": 9,
+        "群馬県": 10,
+        "埼玉県": 11,
+        "千葉県": 12,
+        "東京都": 13,
+        "神奈川県": 14,
+        "新潟県": 15,
+        "富山県": 16,
+        "石川県": 17,
+        "福井県": 18,
+        "山梨県": 19,
+        "長野県": 20,
+        "岐阜県": 21,
+        "静岡県": 22,
+        "愛知県": 23,
+        "三重県": 24,
+        "滋賀県": 25,
+        "京都府": 26,
+        "大阪府": 27,
+        "兵庫県": 28,
+        "奈良県": 29,
+        "和歌山県": 30,
+        "鳥取県": 31,
+        "島根県": 32,
+        "岡山県": 33,
+        "広島県": 34,
+        "山口県": 35,
+        "徳島県": 36,
+        "香川県": 37,
+        "愛媛県": 38,
+        "高知県": 39,
+        "福岡県": 40,
+        "佐賀県": 41,
+        "長崎県": 42,
+        "熊本県": 43,
+        "大分県": 44,
+        "宮崎県": 45,
+        "鹿児島県": 46,
+        "沖縄県": 47
+    }
+    
+    def __init__(self) -> None:
+        pass
+    
+    @classmethod
+    def get_jis_code(cls, prefecture_name:str, ZeroGrant:bool=False) -> int|str:
+        """_summary_\n
+        都道府県名からJISコードを取得する。\n
+        Args:\n
+            prefecture_name (str): 都道府県名\n
+            ZeroGrant (bool): Trueの場合、JISコードが1桁場合は0を付与し返す。例:01,09\n
+            ※その場合は返り値が文字列になる。\n
+        Returns:\n
+            int or str: JISコード\n
+        """
+        jiscode:int|str = cls.JISCODE_DICT[prefecture_name]
+        
+        if ZeroGrant and jiscode < 10:
+            jiscode = "0" + str(jiscode)
+            
+        return jiscode
+    
+    @classmethod
+    def get_prefecture_name(cls, jis_code:int) -> str:
+        """_summary_\n
+        JISコードから都道府県名を返す\n
+        Args:\n
+            jis_code (int): JISコード\n
+
+        Returns:\n
+            str: 都道府県名\n
+        """
+        prefecture_name:str = ""
+        for prefecture_name, jis_code_ in cls.JISCODE_DICT.items():
+            if jis_code_ == jis_code:
+                prefecture_name = prefecture_name
+                break
+        return prefecture_name
+    
+    
+    @classmethod
+    def get_all_prefecture_string(cls, Separator:str=",") -> str:
+        """_summary_\n
+        全都道府県名を返す\n
+        Returns:\n
+            str: 全都道府県名\n
+        """
+        
+        prefecture_string:str = ""
+        for prefecture_name in cls.JISCODE_DICT.keys():
+            prefecture_string += prefecture_name + Separator
+            
+        return prefecture_string
+    
+if __name__ == "__main__":
+    print(Jiscode.get_all_prefecture_string())
+    
